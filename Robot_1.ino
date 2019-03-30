@@ -1,7 +1,7 @@
 ﻿/*
- Name:		Robot_1.ino
- Created:	Сб 30.03.19 20:05:54
- Author:	Korbut Ivan
+ Name:    Robot_1.ino
+ Created: Сб 30.03.19 20:05:54
+ Author:  Korbut Ivan
 */
 
 // the setup function runs once when you press reset or power the board
@@ -20,7 +20,7 @@ HCSR04 hc_L(TrigPin, EchoPinL);
 //HCSR04 hc(TrigPin, new int[3]{ EchoPinL,EchoPinR,EchoPinF }, 3);//initialisation class HCSR04 (trig pin , echo pin, number of sensor)
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2); // Указываем I2C адрес (наиболее распространенное значение), а также параметры экрана (в случае LCD 1602 - 2 строки по 16 символов в каждой 
-UltrPar ug_forward, ug_left, ug_right, ug_upf;
+//UltrPar ug_forward, ug_left, ug_right, ug_upf;
 typedef struct
 {
 	float u_forward;
@@ -40,7 +40,7 @@ void setup() {
 void loop() {
 	UltrPar* up_g;
 	up_g = GetParametrUltrasonc();
-	
+
 
 }
 
@@ -48,14 +48,15 @@ UltrPar* GetParametrUltrasonc() //Получение данных с Ultrasonic
 {
 	//UltrPar *up_g;
 	UltrPar P;
-	P.u_forward= hc_F.dist();
+	P.u_forward = hc_F.dist();
 	P.u_left = hc_L.dist();
 	P.u_right = hc_R.dist();
 	P.u_upf = digitalRead(EchoPinUP);
+	String StrDelim = " ";
 	lcd.setCursor(0, 0);              // Установка курсора в начало первой строки
-	lcd.print(char(P.u_forward) + '  ' + char(P.u_left) + '  ' + char(P.u_left));
-	Serial.println("Forward" + char(P.u_forward));
-	Serial.println("Right" + char(P.u_right));
-	Serial.println("Left" + char(P.u_left));
+	lcd.print(P.u_forward + StrDelim + P.u_left + StrDelim + P.u_right);
+	Serial.println("Forward " + char(P.u_forward));
+	Serial.println("Right " + char(P.u_right));
+	Serial.println("Left " + char(P.u_left));
 	return &P;
 }
