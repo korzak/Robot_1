@@ -33,7 +33,9 @@ struct  UltrPar GetParametrUltrasonc() //Получение данных с Ultr
 	//UltrPar *up_g;
 	UltrPar P;
 	P.u_forward = hc_F.dist();
+	delay(50);
 	P.u_left = hc_L.dist();
+	delay(50);
 	P.u_right = hc_R.dist();
 	P.u_upf = digitalRead(EchoPinUP);
 	String StrDelim = " ";
@@ -48,7 +50,7 @@ struct UltrPar g;
 
 void check_result() {
 	Serial.println();
-	Serial.print("_int_: ");
+	Serial.print("_float_: ");
 	Serial.print(g.u_forward);
 	Serial.print(";  _float_: ");
 	Serial.print(g.u_left);
@@ -71,7 +73,8 @@ void loop() {
 	String StrDelim = " ";
 
 	lcd.setCursor(0, 0);              // Установка курсора в начало первой строки
-	lcd.print(up_g->u_forward + StrDelim + up_g->u_left + StrDelim + up_g->u_right);
+
+	lcd.print(g.u_forward + StrDelim + g.u_left + StrDelim + g.u_right);
 
 }
 
