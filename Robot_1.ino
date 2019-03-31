@@ -17,18 +17,45 @@
 HCSR04 hc_F(TrigPin, EchoPinF);
 HCSR04 hc_R(TrigPin, EchoPinR);
 HCSR04 hc_L(TrigPin, EchoPinL);
-//HCSR04 hc(TrigPin, new int[3]{ EchoPinL,EchoPinR,EchoPinF }, 3);//initialisation class HCSR04 (trig pin , echo pin, number of sensor)
 
 LiquidCrystal_I2C lcd(0x3F, 16, 2); // Указываем I2C адрес (наиболее распространенное значение), а также параметры экрана (в случае LCD 1602 - 2 строки по 16 символов в каждой 
 //UltrPar ug_forward, ug_left, ug_right, ug_upf;
-typedef struct
+ struct UltrPar
 {
 	float u_forward;
 	float u_left;
 	float u_right;
 	boolean u_upf; // Задний датчик
-} UltrPar;
+} ;
 
+struct  UltrPar GetParametrUltrasonc() //Получение данных с Ultrasonic
+{
+	//UltrPar *up_g;
+	UltrPar P;
+	P.u_forward = hc_F.dist();
+	P.u_left = hc_L.dist();
+	P.u_right = hc_R.dist();
+	P.u_upf = digitalRead(EchoPinUP);
+	String StrDelim = " ";
+	//lcd.setCursor(0, 0);              // Установка курсора в начало первой строки
+	//lcd.print(P.u_forward + StrDelim + P.u_left + StrDelim + P.u_right);
+	//Serial.println("Forward " + char(P.u_forward));
+	//Serial.println("Right " + char(P.u_right));
+	//Serial.println("Left " + char(P.u_left));
+	return P;
+}
+struct UltrPar g;
+
+void check_result() {
+	Serial.println();
+	Serial.print("_int_: ");
+	Serial.print(g.u_forward);
+	Serial.print(";  _float_: ");
+	Serial.print(g.u_left);
+	Serial.print(";  _float_: ");
+	Serial.print(g.u_right);
+	Serial.println();
+}
 void setup() {
 	Serial.begin(9600);
 	lcd.init();                      // Инициализация дисплея  
@@ -39,24 +66,13 @@ void setup() {
 // the loop function runs over and over again until power down or reset
 void loop() {
 	UltrPar* up_g;
-	up_g = GetParametrUltrasonc();
-
-
-}
-
-UltrPar* GetParametrUltrasonc() //Получение данных с Ultrasonic
-{
-	//UltrPar *up_g;
-	UltrPar P;
-	P.u_forward = hc_F.dist();
-	P.u_left = hc_L.dist();
-	P.u_right = hc_R.dist();
-	P.u_upf = digitalRead(EchoPinUP);
+	g = GetParametrUltrasonc();
+	check_result();
 	String StrDelim = " ";
+
 	lcd.setCursor(0, 0);              // Установка курсора в начало первой строки
-	lcd.print(P.u_forward + StrDelim + P.u_left + StrDelim + P.u_right);
-	Serial.println("Forward " + char(P.u_forward));
-	Serial.println("Right " + char(P.u_right));
-	Serial.println("Left " + char(P.u_left));
-	return &P;
+	lcd.print(up_g->u_forward + StrDelim + up_g->u_left + StrDelim + up_g->u_right);
+
 }
+
+
