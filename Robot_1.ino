@@ -14,6 +14,7 @@
 #define EchoPinR 6
 #define EchoPinUP 8
 
+
 HCSR04 hc_F(TrigPin, EchoPinF);
 HCSR04 hc_R(TrigPin, EchoPinR);
 HCSR04 hc_L(TrigPin, EchoPinL);
@@ -27,6 +28,10 @@ LiquidCrystal_I2C lcd(0x3F, 16, 2); // Указываем I2C адрес (наи
 	float u_right;
 	boolean u_upf; // Задний датчик
 } ;
+float g_Forvard ;
+float g_Left;
+float g_Riht;
+bool g_FirstValue;
 
 struct  UltrPar GetParametrUltrasonc() //Получение данных с Ultrasonic
 {
@@ -69,6 +74,10 @@ void setup() {
 void loop() {
 	UltrPar* up_g;
 	g = GetParametrUltrasonc();
+	IF (g_FirstValue == False){
+		g_Forvard = g.u_forward;
+
+	}
 	check_result();
 	String StrDelim = " ";
 
